@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 
 
@@ -29,6 +30,12 @@ class SortableInlineMixin(object):
 class SortableTabularInline(SortableInlineMixin, admin.TabularInline):
 
     _suit_sortable_class = 'suit-sortable-tabular'
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == self.sortable:
+            kwargs['widget'] = forms.NumberInput({'class': 'sortable'})
+        return super(SortableTabularInline, self).formfield_for_dbfield(
+            db_field, **kwargs)
 
     class Media:
         js = ('js/jquery-ui-1.10.3.sortable.min.js',
